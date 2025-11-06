@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --primary-green: 142 71% 45%;
+  --primary-gold: 45 100% 50%;
+  --card-bg: 0 0% 8%;
+  --border-color: 0 0% 20%;
+}
+
+body {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.luxury-card {
+  background-color: #141414;
+  border: 1px solid #333333;
+}
+
+.luxury-card:hover {
+  border-color: #10B981;
+}
+
+.btn-primary {
+  background-color: #10B981;
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #059669;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+}
+
+.btn-secondary {
+  background-color: #FFD700;
+  color: #000000;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #FFC700;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.text-gold {
+  color: #FFD700;
+}
+
+.text-green {
+  color: #10B981;
+}
+
+.border-gold {
+  border-color: #FFD700;
+}
+
+.border-green {
+  border-color: #10B981;
+}
+
