@@ -2,12 +2,12 @@
 pragma solidity ^0.8.24;
 
 import {FHE, euint32, externalEuint32} from "@fhevm/solidity/lib/FHE.sol";
-import {SepoliaConfig} from "@fhevm/solidity/config/ZamaConfig.sol";
+import {ZamaEthereumConfig} from "@fhevm/solidity/config/ZamaConfig.sol";
 
 /// @title EventsScore - Encrypted Event Rating System
 /// @notice A privacy-preserving event rating system using FHEVM
 /// @dev All scores are encrypted and computed on encrypted data
-contract EventsScore is SepoliaConfig {
+contract EventsScore is ZamaEthereumConfig {
     // Activity structure
     struct Activity {
         address organizer;

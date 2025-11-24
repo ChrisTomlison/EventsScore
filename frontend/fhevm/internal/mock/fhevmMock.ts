@@ -6,7 +6,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-import { JsonRpcProvider } from "ethers";
+import { JsonRpcProvider, Contract } from "ethers";
 import { MockFhevmInstance } from "@fhevm/mock-utils";
 import { FhevmInstance } from "../../fhevmTypes";
 
@@ -20,6 +20,17 @@ export const fhevmMockCreateInstance = async (parameters: {
   };
 }): Promise<FhevmInstance> => {
   const provider = new JsonRpcProvider(parameters.rpcUrl);
+  // Resolve EIP712 verifying contract for InputVerifier dynamically
+  const inputVerifier = new Contract(
+    parameters.metadata.InputVerifierAddress,
+    [
+      "function eip712Domain() external view returns (bytes1, string, string, uint256, address, bytes32, uint256[])",
+    ],
+    provider
+  );
+  const domain = await inputVerifier.eip712Domain();
+  const verifyingContractAddressInputVerification = domain[4] as `0x${string}`;
+
   const instance = await MockFhevmInstance.create(provider, provider, {
     aclContractAddress: parameters.metadata.ACLAddress,
     chainId: parameters.chainId,
@@ -28,8 +39,10 @@ export const fhevmMockCreateInstance = async (parameters: {
     kmsContractAddress: parameters.metadata.KMSVerifierAddress,
     verifyingContractAddressDecryption:
       "0x5ffdaAB0373E62E2ea2944776209aEf29E631A64",
-    verifyingContractAddressInputVerification:
-      "0x812b06e1CDCE800494b79fFE4f925A504a9A9810",
+    verifyingContractAddressInputVerification,
+  }, {
+    inputVerifierProperties: {},
+    kmsVerifierProperties: {},
   });
   return instance;
 };
