@@ -81,10 +81,33 @@ async function getChainId(
 ): Promise<number> {
   if (typeof providerOrUrl === "string") {
     const provider = new JsonRpcProvider(providerOrUrl);
-    return Number((await provider.getNetwork()).chainId);
+    const network = await provider.getNetwork();
+    const id = (network as unknown as { chainId?: number | bigint })?.chainId;
+    if (typeof id === "number" || typeof id === "bigint") {
+      return Number(id);
+    }
+    throwFhevmError(
+      "CHAINID_NETWORK_INVALID",
+      "provider.getNetwork() did not return a valid chainId"
+    );
   }
-  const chainId = await providerOrUrl.request({ method: "eth_chainId" });
-  return Number.parseInt(chainId as string, 16);
+  // Guard: provider must expose request()
+  if (!providerOrUrl || typeof (providerOrUrl as any).request !== "function") {
+    throwFhevmError(
+      "CHAINID_PROVIDER_INVALID",
+      "Provider must implement EIP-1193 request()"
+    );
+  }
+  const chainIdHex = await (providerOrUrl as Eip1193Provider).request({
+    method: "eth_chainId",
+  });
+  if (typeof chainIdHex !== "string") {
+    throwFhevmError(
+      "CHAINID_RESPONSE_INVALID",
+      "eth_chainId did not return a hex string"
+    );
+  }
+  return Number.parseInt(chainIdHex, 16);
 }
 
 async function getWeb3Client(rpcUrl: string) {
