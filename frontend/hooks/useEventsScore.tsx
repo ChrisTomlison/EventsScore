@@ -375,7 +375,8 @@ export const useEventsScore = (parameters: {
 
       setDecryptedValues(prev => {
         const newMap = new Map(prev);
-        newMap.set(key, { handle, clear: res[handle] });
+        const clearVal = (res as unknown as Record<string, string | bigint | boolean>)[handle];
+        newMap.set(key, { handle, clear: clearVal });
         return newMap;
       });
 
